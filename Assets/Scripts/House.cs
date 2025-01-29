@@ -3,19 +3,20 @@ using UnityEngine;
 public class House : MonoBehaviour
 {
     [SerializeField] private AlarmSystem _alarm;
+    [SerializeField] private TriggerZona _zona;
 
     private bool _isEntrance;
 
     private void OnEnable()
     {
-        _alarm.ObjectEntered += WasEntry;
-        _alarm.ObjectOut += WasOut;
+        _zona.ObjectEntered += WasEntry;
+        _zona.ObjectOut += WasOut;
     }
 
     private void OnDisable()
     {
-        _alarm.ObjectEntered -= WasEntry;
-        _alarm.ObjectOut -= WasOut;
+        _zona.ObjectEntered -= WasEntry;
+        _zona.ObjectOut -= WasOut;
     }
     
     private void WasEntry (GameObject obj)

@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -11,26 +10,12 @@ public class AlarmSystem : MonoBehaviour
     [SerializeField] private float _delay = 0.5f;
 
     private Coroutine _coroutine;
-
-    public event Action<GameObject> ObjectEntered;
-    public event Action<GameObject> ObjectOut;
     
-
     private void Start()
     {
         _audioSource.volume = _minVolume;
     }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        ObjectEntered?.Invoke(other.gameObject);
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        ObjectOut?.Invoke(other.gameObject);
-    }
-
+    
     private IEnumerator ChangeVolume(float targetVolume)
     {
         WaitForSeconds delay = new WaitForSeconds(_delay);
@@ -64,9 +49,7 @@ public class AlarmSystem : MonoBehaviour
     {
         SetVolume(_minVolume);
     }
-
     
-
     private void SetVolume(float volume)
     {
         if (_coroutine != null)
