@@ -35,6 +35,17 @@ public class AlarmSystem : MonoBehaviour
         }
     }
     
+    private void SetVolume(float volume)
+    {
+        if (_coroutine != null)
+            
+        {
+            StopCoroutine(_coroutine);
+        }
+    
+        _coroutine = StartCoroutine(ChangeVolume(volume));
+    }
+    
     public void OnAlarm()
     {
         if (_audioSource.isPlaying == false)
@@ -48,15 +59,5 @@ public class AlarmSystem : MonoBehaviour
     public void OffAlarm()
     {
         SetVolume(_minVolume);
-    }
-    
-    private void SetVolume(float volume)
-    {
-        if (_coroutine != null)
-        {
-            StopCoroutine(_coroutine);
-        }
-
-        _coroutine = StartCoroutine(ChangeVolume(volume));
     }
 }
