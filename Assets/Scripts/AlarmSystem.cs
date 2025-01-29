@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -10,7 +11,10 @@ public class AlarmSystem : MonoBehaviour
     [SerializeField] private float _delay = 0.5f;
 
     private Coroutine _coroutine;
-    private WaitForSeconds _waitForSeconds;
+
+    public event Action<GameObject> ObjectEntered;
+    public event Action<GameObject> ObjectOut;
+    
 
     private void Start()
     {
@@ -19,24 +23,17 @@ public class AlarmSystem : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.TryGetComponent(out Zombie zombie))
-        {
-            OnAlarm();
-        }
-        
+        ObjectEntered?.Invoke(other.gameObject);
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.TryGetComponent(out Zombie zombie))
-        {
-            OffAlarm();
-        }
+        ObjectOut?.Invoke(other.gameObject);
     }
 
     private IEnumerator ChangeVolume(float targetVolume)
     {
-        _waitForSeconds = new WaitForSeconds(_delay);
+        WaitForSeconds delay = new WaitForSeconds(_delay);
 
         float trackSpeed = _maxVolume / _speedCangeSound;
 
@@ -44,7 +41,7 @@ public class AlarmSystem : MonoBehaviour
         {
             _audioSource.volume = Mathf.MoveTowards(_audioSource.volume, targetVolume, trackSpeed);
 
-            yield return _waitForSeconds;
+            yield return delay;
         }
 
         if (_audioSource.volume <= _minVolume)
@@ -53,7 +50,7 @@ public class AlarmSystem : MonoBehaviour
         }
     }
     
-    private void OnAlarm()
+    public void OnAlarm()
     {
         if (_audioSource.isPlaying == false)
         {
@@ -63,7 +60,7 @@ public class AlarmSystem : MonoBehaviour
         SetVolume(_maxVolume);
     }
 
-    private void OffAlarm()
+    public void OffAlarm()
     {
         SetVolume(_minVolume);
     }
@@ -79,5 +76,4 @@ public class AlarmSystem : MonoBehaviour
 
         _coroutine = StartCoroutine(ChangeVolume(volume));
     }
-    
 }
